@@ -75,15 +75,12 @@ def two_layer_net(X, model, y=None, reg=0.0):
 
   # compute the forward pass
   scores = None
-  #############################################################################
-  # TODO: Perform the forward pass, computing the class scores for the input. #
-  # Store the result in the scores variable, which should be an array of      #
-  # shape (N, C).                                                             #
-  #############################################################################
-  pass
-  #############################################################################
-  #                              END OF YOUR CODE                             #
-  #############################################################################
+
+  # inputs x hidden_layer_weights + hidden_layer_bias
+  hidden_layer_scores = np.maximum(0, np.dot(X, W1) + b1)
+
+  # hidden_layer_scores x output_layer_weights + output_layer_bias
+  scores = np.dot(hidden_layer_scores, W2) + b2
   
   # If the targets are not given then jump out, we're done
   if y is None:
@@ -91,6 +88,7 @@ def two_layer_net(X, model, y=None, reg=0.0):
 
   # compute the loss
   loss = None
+
   #############################################################################
   # TODO: Finish the forward pass, and compute the loss. This should include  #
   # both the data loss and L2 regularization for W1 and W2. Store the result  #
