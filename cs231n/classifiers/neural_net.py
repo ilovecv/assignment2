@@ -89,6 +89,18 @@ def two_layer_net(X, model, y=None, reg=0.0):
   # compute the loss
   loss = None
 
+  # softmax
+  cross_entropy_loss = np.exp(scores)
+  class_probs        = cross_entropy_loss / np.sum(cross_entropy_loss, axis=1, keepdims=True)
+
+  # loss
+  num_train     = X.shape[0]
+  correct_probs = -np.log(class_probs[range(num_train),y])
+
+  loss  = np.sum(correct_probs) / num_train # average over num_train
+  loss += 0.5 * reg * np.sum(W1 * W1)       # regularization hidden layer
+  loss += 0.5 * reg * np.sum(W2 * W2)       # regularization output layer
+
   #############################################################################
   # TODO: Finish the forward pass, and compute the loss. This should include  #
   # both the data loss and L2 regularization for W1 and W2. Store the result  #
