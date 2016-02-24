@@ -101,29 +101,36 @@ def two_layer_net(X, model, y=None, reg=0.0):
   loss += 0.5 * reg * np.sum(W1 * W1)       # regularization hidden layer
   loss += 0.5 * reg * np.sum(W2 * W2)       # regularization output layer
 
-  #############################################################################
-  # TODO: Finish the forward pass, and compute the loss. This should include  #
-  # both the data loss and L2 regularization for W1 and W2. Store the result  #
-  # in the variable loss, which should be a scalar. Use the Softmax           #
-  # classifier loss. So that your results match ours, multiply the            #
-  # regularization loss by 0.5                                                #
-  #############################################################################
-  pass
-  #############################################################################
-  #                              END OF YOUR CODE                             #
-  #############################################################################
-
   # compute the gradients
   grads = {}
-  #############################################################################
-  # TODO: Compute the backward pass, computing the derivatives of the weights #
-  # and biases. Store the results in the grads dictionary. For example,       #
-  # grads['W1'] should store the gradient on W1, and be a matrix of same size #
-  #############################################################################
-  pass
-  #############################################################################
-  #                              END OF YOUR CODE                             #
-  #############################################################################
+
+  # calc gradient as in case study notes
+  dscores = class_probs
+  dscores[range(num_train),y] -= 1
+  dscores /= num_train
+
+  # backpropagate W2, B2
+  dW2 = np.dot(hidden_layer_scores.T, dscores) # d(matrix mult) = matrix mult with transpose
+  db2 = np.sum(dscores, axis=0, keepdims=True) # d(sum(a,b,c)) = sum(d(a),d(b),d(c)) -> here it's dscores
+
+  # backpropagate hidden_layer_scores
+  dHidden = np.dot(dscores, W2.T)
+
+  # backpropagate relu
+  dHidden[hidden_layer_scores <= 0] = 0
+
+  # backpropagate W1, B1
+  dW1 = np.dot(X.T, dHidden)
+  db1 = np.sum(dHidden, axis=0, keepdims=True)
+
+  # regularization
+  dW2 += reg * W2
+  dW1 += reg * W1
+
+  grads['W1'] = dW1
+  grads['b1'] = db1
+  grads['W2'] = dW2
+  grads['b2'] = db2
 
   return loss, grads
 
