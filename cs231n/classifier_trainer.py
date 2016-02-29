@@ -65,6 +65,7 @@ class ClassifierTrainer(object):
     loss_history = []
     train_acc_history = []
     val_acc_history = []
+
     for it in xrange(num_iters):
       if it % 10 == 0:  print 'starting iteration ', it
 
@@ -88,19 +89,11 @@ class ClassifierTrainer(object):
         if update == 'sgd':
           dx = -learning_rate * grads[p]
         elif update == 'momentum':
+          # Note: uses self.step_cache[p] to store veloctiy
           if not p in self.step_cache: 
             self.step_cache[p] = np.zeros(grads[p].shape)
-          dx = np.zeros_like(grads[p]) # you can remove this after
-          #####################################################################
-          # TODO: implement the momentum update formula and store the step    #
-          # update into variable dx. You should use the variable              #
-          # step_cache[p] and the momentum strength is stored in momentum.    #
-          # Don't forget to also update the step_cache[p].                    #
-          #####################################################################
-          pass
-          #####################################################################
-          #                      END OF YOUR CODE                             #
-          #####################################################################
+          dx = momentum * self.step_cache[p] - learning_rate * grads[p]
+          self.step_cache[p] = dx
         elif update == 'rmsprop':
           decay_rate = 0.99 # you could also make this an option
           if not p in self.step_cache: 
