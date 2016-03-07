@@ -111,7 +111,7 @@ def two_layer_net(X, model, y=None, reg=0.0):
 
   # backpropagate W2, B2
   dW2 = np.dot(hidden_layer_scores.T, dscores) # d(matrix mult) = matrix mult with transpose
-  db2 = np.sum(dscores, axis=0, keepdims=True) # d(sum(a,b,c)) = sum(d(a),d(b),d(c)) -> here it's dscores
+  db2 = np.sum(dscores, axis=0)                # d(sum(a,b,c)) = sum(d(a),d(b),d(c)) -> here it's dscores
 
   # backpropagate hidden_layer_scores
   dHidden = np.dot(dscores, W2.T)
@@ -121,7 +121,7 @@ def two_layer_net(X, model, y=None, reg=0.0):
 
   # backpropagate W1, B1
   dW1 = np.dot(X.T, dHidden)
-  db1 = np.sum(dHidden, axis=0, keepdims=True)
+  db1 = np.sum(dHidden, axis=0)
 
   # regularization
   dW2 += reg * W2
