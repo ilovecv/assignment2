@@ -67,7 +67,8 @@ class ClassifierTrainer(object):
     val_acc_history = []
 
     for it in xrange(num_iters):
-      if it % 10 == 0:  print 'starting iteration ', it
+      if verbose:
+        if it % 10 == 0:  print 'starting iteration ', it
 
       # get batch of data
       if sample_batches:
