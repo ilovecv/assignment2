@@ -82,7 +82,8 @@ def relu_forward(x):
   - out: Output, of the same shape as x
   - cache: x
   """
-  out = None
+  out = np.maximum(0, x)
+
   #############################################################################
   # TODO: Implement the ReLU forward pass.                                    #
   #############################################################################
@@ -105,7 +106,11 @@ def relu_backward(dout, cache):
   Returns:
   - dx: Gradient with respect to x
   """
-  dx, x = None, cache
+
+  dx, x      = None, cache
+  dx         = dout
+  dx[x <= 0] = 0
+
   #############################################################################
   # TODO: Implement the ReLU backward pass.                                   #
   #############################################################################
