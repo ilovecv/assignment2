@@ -18,6 +18,13 @@ def affine_forward(x, w, b):
   - cache: (x, w, b)
   """
   out = None
+
+  x_total_dim = np.prod(x.shape)
+  x_shape_1   = w.shape[0]  # not sure about this -- just assume since they have to be same inner dimension
+  x_shape_0   = x_total_dim / x_shape_1
+  x_reshaped  = x.reshape(x_shape_0, x_shape_1)
+
+  out = np.dot(x_reshaped, w) + b
   #############################################################################
   # TODO: Implement the affine forward pass. Store the result in out. You     #
   # will need to reshape the input into rows.                                 #
