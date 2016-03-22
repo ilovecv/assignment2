@@ -19,10 +19,8 @@ def affine_forward(x, w, b):
   """
   out = None
 
-  x_total_dim = np.prod(x.shape)
-  x_shape_1   = w.shape[0]  # not sure about this -- just assume since they have to be same inner dimension
-  x_shape_0   = x_total_dim / x_shape_1
-  x_reshaped  = x.reshape(x_shape_0, x_shape_1)
+  x_shape_1   = np.prod(x.shape) / x.shape[0]
+  x_reshaped  = x.reshape(x.shape[0], x_shape_1)
 
   out = np.dot(x_reshaped, w) + b
   #############################################################################
@@ -46,6 +44,7 @@ def affine_backward(dout, cache):
   - cache: Tuple of:
     - x: Input data, of shape (N, d_1, ... d_k)
     - w: Weights, of shape (D, M)
+    - b: biases, of shape (M, )
 
   Returns a tuple of:
   - dx: Gradient with respect to x, of shape (N, d1, ..., d_k)
@@ -54,6 +53,14 @@ def affine_backward(dout, cache):
   """
   x, w, b = cache
   dx, dw, db = None, None, None
+
+  x_shape_1  = np.prod(x.shape) / x.shape[0]
+  x_reshaped = x.reshape(x.shape[0], x_shape_1)
+
+  dx = np.dot(dout, w.T).reshape(x.shape) # reshape to x shape afterwards
+  dw = np.dot(x_reshaped.T, dout)
+  db = np.sum(dout, axis=0)
+
   #############################################################################
   # TODO: Implement the affine backward pass.                                 #
   #############################################################################
